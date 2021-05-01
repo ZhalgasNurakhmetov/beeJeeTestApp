@@ -3,7 +3,9 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  test: false,
+  apiUrl: 'https://uxcandy.com/~shapoval/test-task-backend/v2/',
 };
 
 /*

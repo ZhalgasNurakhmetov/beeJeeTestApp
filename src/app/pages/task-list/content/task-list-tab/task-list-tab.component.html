@@ -1,0 +1,64 @@
+<button class="btn btn-primary ml-3" (click)="goToTaskCreate()">Создать задание</button>
+<button class="btn btn-primary ml-3" (click)="goToLogin()" *ngIf="!authToken; else exitButton">Войти</button>
+
+<div class="container-fluid">
+  <div class="row mt-2">
+    <div class="col-sm-12 col-md-12 col-lg-11 col-xl-10">
+      <table class="table table-bordered table-hover">
+        <thead class="thead-dark">
+        <tr>
+          <th class="w-25">
+            Имя пользователя
+            <i class="bi bi-sort-up ml-2" *ngIf="sortDirection.value === 'asc'; else ascending" (click)="setSortDirection('desc')"></i>
+            <i class="bi bi-funnel ml-2" (click)="setSortField('username')"></i>
+          </th>
+          <th class="w-25">
+            Почта
+            <i class="bi bi-funnel ml-2" (click)="setSortField('email')"></i>
+          </th>
+          <th class="w-25">
+            Текст
+          </th>
+          <th class="w-25">
+            Статус
+            <i class="bi bi-funnel ml-2" (click)="setSortField('status')"></i>
+          </th>
+          <th *ngIf="authToken">
+          </th>
+        </tr>
+        </thead>
+        <tbody >
+        <tr *ngFor="let task of taskList">
+          <td>{{task?.username}}</td>
+          <td>{{task?.email}}</td>
+          <td>{{task?.text}}</td>
+          <td>{{
+            task?.status === taskStatusEnum.NOT_DONE ? 'Задача не выполнена' :
+              task?.status === taskStatusEnum.NOT_DONE_AND_EDITED_BY_ADMIN ? 'Задача не выполнена, отредактирована админом' :
+                task?.status === taskStatusEnum.DONE ? 'Задача выполнена' : 'Задача отредактирована админом и выполнена'
+            }}
+
+            <i class="bi bi-check-circle-fill text-success" *ngIf="task?.status === taskStatusEnum.DONE || task?.status === taskStatusEnum.DONE_AND_EDIT_BY_ADMIN"></i>
+          </td>
+          <td class="text-center" *ngIf="authToken">
+            <div class="btn-group">
+              <button type="button" (click)="goToTaskEdit(task?.id)" class="btn btn-outline-danger" data-toggle="tooltip" title="Редактировать"><i class="bi bi-pencil-fill"></i></button>
+            </div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+      <div class="d-flex flex-row">
+        <div class="p-2" *ngFor="let page of totalPages" (click)="setPageNumber(page)">{{page}}</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #ascending>
+  <i class="bi bi-sort-down" (click)="setSortDirection('asc')"></i>
+</ng-template>
+
+<ng-template #exitButton>
+  <button class="btn btn-primary ml-3" (click)="logout()">Выйти</button>
+</ng-template>
